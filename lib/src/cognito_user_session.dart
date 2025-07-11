@@ -42,7 +42,7 @@ class CognitoUserSession {
 
   /// Calculate computer's clock drift
   int calculateClockDrift() {
-    final now = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+    final now = (DateTime.timestamp().millisecondsSinceEpoch / 1000).floor();
     final iat = min(accessToken.getIssuedAt(), idToken.getIssuedAt());
     return (now - iat);
   }
@@ -59,8 +59,8 @@ class CognitoUserSession {
     if (_invalidated) {
       return false;
     }
-    final now = (DateTime.now().millisecondsSinceEpoch / 1000).floor();
-    final adjusted = now - clockDrift!;
+    final now = (DateTime.timestamp().millisecondsSinceEpoch / 1000).floor();
+    final adjusted = now + clockDrift!;
 
     return adjusted < accessToken.getExpiration() &&
         adjusted < idToken.getExpiration();
