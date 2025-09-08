@@ -46,13 +46,14 @@ class Client {
         body: body,
       );
     } catch (e) {
-      if (e.toString().contains('Failed host lookup:')) {
+      final errorMessage = e.toString();
+      if (errorMessage.contains('SocketException')) {
         throw CognitoClientException(
           'SocketException',
           code: 'NetworkError',
         );
       }
-      throw CognitoClientException('Unknown Error', code: 'Unknown error');
+      throw CognitoClientException(errorMessage, code: 'Unknown error');
     }
 
     dynamic data;
