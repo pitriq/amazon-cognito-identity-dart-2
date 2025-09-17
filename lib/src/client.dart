@@ -53,6 +53,12 @@ class Client {
           code: 'NetworkError',
         );
       }
+      if (errorMessage.contains('HandshakeException')) {
+        throw CognitoClientException(
+          'HandshakeException',
+          code: 'NetworkError',
+        );
+      }
       throw CognitoClientException(errorMessage, code: 'Unknown error');
     }
 
