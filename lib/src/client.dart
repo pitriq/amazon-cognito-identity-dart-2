@@ -47,11 +47,9 @@ class Client {
       );
     } catch (e) {
       final errorMessage = e.toString();
-      if (errorMessage.contains('SocketException')) {
-        throw CognitoClientException(
-          'SocketException',
-          code: 'NetworkError',
-        );
+      if (errorMessage.contains('SocketException') ||
+          errorMessage.contains('Connection closed')) {
+        throw CognitoClientException('SocketException', code: 'NetworkError');
       }
       if (errorMessage.contains('HandshakeException')) {
         throw CognitoClientException(
