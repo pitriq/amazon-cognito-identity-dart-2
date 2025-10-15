@@ -26,8 +26,12 @@ class Client {
   }
 
   /// Makes requests on AWS API service provider
-  dynamic request(String operation, Map<String, dynamic> params,
-      {String? endpoint, String? service}) async {
+  dynamic request(
+    String operation,
+    Map<String, dynamic> params, {
+    String? endpoint,
+    String? service,
+  }) async {
     final endpointReq = endpoint ?? this.endpoint;
     final targetService = service ?? _service;
     final body = json.encode(params);
@@ -46,13 +50,12 @@ class Client {
         body: body,
       );
     } catch (e) {
-      final errorMessage = e.toString();
-      if (errorMessage.contains('SocketException') ||
-          errorMessage.contains('Connection closed') ||
-          errorMessage.contains('connection abort')) {
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('socket') ||
+          errorMessage.contains('connection')) {
         throw CognitoClientException('SocketException', code: 'NetworkError');
       }
-      if (errorMessage.contains('HandshakeException')) {
+      if (errorMessage.contains('handshake')) {
         throw CognitoClientException(
           'HandshakeException',
           code: 'NetworkError',
